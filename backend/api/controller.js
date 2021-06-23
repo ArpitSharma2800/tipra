@@ -1,5 +1,7 @@
 const {
-  create
+  create,
+  signin,
+  updateSignIn
 } = require("./service");
 const jwt = require('jsonwebtoken');
 let md5 = require('md5');
@@ -7,14 +9,10 @@ const moment = require('moment')
 const {
   v4: uuidv4
 } = require('uuid');
+
 async function hashPassword(password) {
   return await md5(password);
 }
-
-async function validatePassword(plainPassword, hashedPassword) {
-  return await bcrypt.compare(plainPassword, hashedPassword);
-}
-
 
 module.exports = {
   serverCheck: (req, res) => {
@@ -75,50 +73,105 @@ module.exports = {
     });
   },
   //signin
-  signin: async (req, res) => {
-    try {
-      const {
-        email,
-        password
-      } = req.body;
-
-      const user = await User.findOne({
-        email
-      });
-      // console.log(user);
-      if (!user) return res.status(404).json({
-        success: 0,
-        message: 'Email does not exist'
-      });
-      const validPassword = await validatePassword(password, user.password);
-      if (!validPassword) return res.status(503).json({
-        success: 0,
-        message: 'Password is not correct'
-      });
-      const accessToken = jwt.sign({
-        userId: user._id,
-        role: user.role,
-        email: user.email
-      }, process.env.JWT_SECRET, {
-        expiresIn: "1d"
-      });
-      await User.findByIdAndUpdate(user._id, {
-        accessToken
-      })
-      res.status(200).json({
-        data: {
-          email: user.email,
-          role: user.role,
-          _id: user._id
-        },
-        accessToken
-      })
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        success: 0,
-        message: "Error Message",
-      });
+  signIn: async (req, res) => {
+    const {
+      email,
+      password
+    } = req.body;
+    const data = {
+      emailAdd: email,
+      pwd: password
     }
+    signin(data, (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: err,
+        });
+      }
+      if (results[0] == null) {
+        return res.status(403).send({
+          success: false,
+          messgae: "no user found"
+        })
+      } else {
+        // console.log(md5(password) == results[0].pwd);
+        if (md5(password) == results[0].pwd) {
+          const accessToken = jwt.sign({
+            userId: results[0].id,
+            role: results[0].role,
+            email: results[0].emailAdd,
+            username: results[0].username
+          }, process.env.JWT_SECRET, {
+            expiresIn: "1h"
+          });
+          const data = {
+            lastActive: moment().format('MMMM Do YYYY, h:mm:ss a'),
+            lastLogin: moment().format('MMMM Do YYYY, h:mm:ss a'),
+            jwttoken: accessToken,
+            id: results[0].id
+          }
+          const result = {
+            email: results[0].emailAdd,
+            username: results[0].username,
+            role: results[0].role,
+            id: results[0].id
+          }
+          updateSignIn(data, (err, results) => {
+            if (err) {
+              console.log(err);
+              return res.status(500).json({
+                success: 0,
+                message: err,
+              });
+            }
+            return res.status(200).json({
+              data: {
+                result
+              },
+              accessToken
+            })
+          });
+        } else {
+          var response = {
+            message: "Error: Credentials incorrect",
+          };
+          res.writeHead(404, {
+            "Content-Type": "application/json",
+          });
+          return res.end(JSON.stringify(response));
+        }
+      }
+
+    });
+    // console.log(user);
+    // if (!user) return res.status(404).json({
+    //   success: 0,
+    //   message: 'Email does not exist'
+    // });
+    // const validPassword = await validatePassword(password, user.password);
+    // if (!validPassword) return res.status(503).json({
+    //   success: 0,
+    //   message: 'Password is not correct'
+    // });
+    // const accessToken = jwt.sign({
+    //   userId: user._id,
+    //   role: user.role,
+    //   email: user.email
+    // }, process.env.JWT_SECRET, {
+    //   expiresIn: "1d"
+    // });
+    // await User.findByIdAndUpdate(user._id, {
+    //   accessToken
+    // })
+    // res.status(200).json({
+    //   data: {
+    //     email: user.email,
+    //     role: user.role,
+    //     _id: user._id
+    //   },
+    //   accessToken
+    // })
   },
 };

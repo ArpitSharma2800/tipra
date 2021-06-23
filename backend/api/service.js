@@ -27,4 +27,30 @@ module.exports = {
       }
     );
   },
+  signin: (data, callBack) => {
+    pool.query(
+      `SELECT * FROM user WHERE emailAdd = '${data.emailAdd}'`,
+      (error, results, fields) => {
+        if (error) {
+          return callBack(error);
+        }
+        return callBack(null, results);
+      }
+    );
+  },
+  updateSignIn: (data, callBack) => {
+    pool.query(
+      `UPDATE user  SET 
+      lastLogin = '${data.lastLogin}',
+      jwttoken = '${data.jwttoken}',
+      lastActive = '${data.lastActive}'
+      WHERE id = '${data.id}'`,
+      (error, results, fields) => {
+        if (error) {
+          return callBack(error);
+        }
+        return callBack(null, results);
+      }
+    );
+  }
 };
