@@ -75,4 +75,50 @@ module.exports = {
     });
   },
   //signin
+  signin: async (req, res) => {
+    try {
+      const {
+        email,
+        password
+      } = req.body;
+
+      const user = await User.findOne({
+        email
+      });
+      // console.log(user);
+      if (!user) return res.status(404).json({
+        success: 0,
+        message: 'Email does not exist'
+      });
+      const validPassword = await validatePassword(password, user.password);
+      if (!validPassword) return res.status(503).json({
+        success: 0,
+        message: 'Password is not correct'
+      });
+      const accessToken = jwt.sign({
+        userId: user._id,
+        role: user.role,
+        email: user.email
+      }, process.env.JWT_SECRET, {
+        expiresIn: "1d"
+      });
+      await User.findByIdAndUpdate(user._id, {
+        accessToken
+      })
+      res.status(200).json({
+        data: {
+          email: user.email,
+          role: user.role,
+          _id: user._id
+        },
+        accessToken
+      })
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: 0,
+        message: "Error Message",
+      });
+    }
+  },
 };
