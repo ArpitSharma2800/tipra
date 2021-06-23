@@ -21,7 +21,7 @@ module.exports = {
     console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
     return res.status(200).json({
       success: true,
-      message: "Server running .."
+      message: "Server running ..."
     });
   },
   //signUp
