@@ -46,3 +46,8 @@ ALTER TABLE
     `connection` ADD CONSTRAINT `connection_facerid_foreign` FOREIGN KEY(`facerId`) REFERENCES `user`(`id`);
 ALTER TABLE
     `address` ADD CONSTRAINT `address_userid_foreign` FOREIGN KEY(`userId`) REFERENCES `user`(`id`);
+
+
+
+
+SELECT * FROM user WHERE id NOT IN (SELECT initiatorId from connection WHERE facerId='bf7c65dc-53cc-43e9-8aba-f4e9376c2805') AND id NOT IN ('bf7c65dc-53cc-43e9-8aba-f4e9376c2805')

@@ -1,7 +1,8 @@
 const {
   create,
   signin,
-  updateSignIn
+  updateSignIn,
+  getUserDetails
 } = require("./service");
 const jwt = require('jsonwebtoken');
 let md5 = require('md5');
@@ -145,33 +146,28 @@ module.exports = {
       }
 
     });
-    // console.log(user);
-    // if (!user) return res.status(404).json({
-    //   success: 0,
-    //   message: 'Email does not exist'
-    // });
-    // const validPassword = await validatePassword(password, user.password);
-    // if (!validPassword) return res.status(503).json({
-    //   success: 0,
-    //   message: 'Password is not correct'
-    // });
-    // const accessToken = jwt.sign({
-    //   userId: user._id,
-    //   role: user.role,
-    //   email: user.email
-    // }, process.env.JWT_SECRET, {
-    //   expiresIn: "1d"
-    // });
-    // await User.findByIdAndUpdate(user._id, {
-    //   accessToken
-    // })
-    // res.status(200).json({
-    //   data: {
-    //     email: user.email,
-    //     role: user.role,
-    //     _id: user._id
-    //   },
-    //   accessToken
-    // })
   },
+  //getuser
+  getusers: async (req, res) => {
+    const data = {
+      id: req.user.userId
+    }
+    // console.log(req.user.userId);
+    getUserDetails(data, (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: err,
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        data: {
+          results
+        },
+      });
+    })
+  }
+
 };

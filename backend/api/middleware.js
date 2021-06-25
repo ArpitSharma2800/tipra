@@ -15,8 +15,9 @@ exports.allowifloggedin = async (req, res, next) => {
             },
             (err, user) => {
                 if (err) {
-                    console.log(err);
+                    // console.log(err);
                     return res.status(401).json({
+                        success: false,
                         error: "You need to be logged in to access this route"
                     });
                 } else {
@@ -42,6 +43,7 @@ exports.grantAccess = function (action, resource) {
             const permission = roles.can(req.user.role)[action](resource);
             if (!permission.granted) {
                 return res.status(401).json({
+                    success: false,
                     error: "You don't have enough permission to perform this action"
                 });
             }
