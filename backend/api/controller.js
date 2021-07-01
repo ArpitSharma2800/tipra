@@ -2,7 +2,8 @@ const {
   create,
   signin,
   updateSignIn,
-  getUserDetails
+  getUserDetails,
+  getSingleDetail
 } = require("./service");
 const jwt = require('jsonwebtoken');
 let md5 = require('md5');
@@ -163,10 +164,38 @@ module.exports = {
       }
       return res.status(200).json({
         success: true,
-        data: {
           results
-        },
       });
+    })
+  },
+  //particular user
+  getSingleUser:async (req,res)=>{
+    console.log(req.query.username);
+    const data = {
+      id: req.user.userId,
+      username: req.query.username
+    }
+    getSingleDetail(data, (err, results) => {
+      console.log(results);
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: err,
+        });
+      }
+      if (results[0] == null) {
+        return res.status(404).send({
+          success: false,
+          messgae: "no user found"
+        })
+      }else{
+        return res.status(200).json({
+        success: true,
+          results
+      });
+      }
+      
     })
   }
 

@@ -53,6 +53,7 @@ module.exports = {
       }
     );
   },
+
   getUserDetails: (data, callBack) => {
     console.log(data.id);
     pool.query(
@@ -64,5 +65,17 @@ module.exports = {
         return callBack(null, results);
       }
     )
+  },
+
+  getSingleDetail:(data, callBack)=>{
+    pool.query(
+      `SELECT id,name,username,profileImage,joinDate,gender FROM user WHERE id NOT IN(SELECT initiatorId from connection WHERE facerId='${data.id}' AND isblocked=1) AND username='${data.username}'`,
+      (error, results, fields) => {
+        if (error) {
+          return callBack(error);
+        }
+        return callBack(null, results);
+      }
+      )
   }
 };
