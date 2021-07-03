@@ -7,6 +7,7 @@ const {
   connection,
   blockuser,
   updateConn,
+  createConne,
 } = require("./service");
 const jwt = require("jsonwebtoken");
 let md5 = require("md5");
@@ -200,6 +201,9 @@ module.exports = {
     const data = {
       initiatorId: req.user.userId,
       facerId: req.body.facerId,
+      isfriend: 0,
+      isclosefriend: 0,
+      isblocked: 1,
     };
 
     connection(data, (err, results) => {
@@ -212,7 +216,7 @@ module.exports = {
       }
       if (results[0] == null) {
         data.uuid = uuid;
-        blockuser(data, (err, results) => {
+        createConne(data, (err, results) => {
           if (err) {
             console.log(err);
             return res.status(500).json({

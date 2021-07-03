@@ -80,10 +80,17 @@ module.exports = {
     );
   },
   //block user
-  blockuser: (data, callBack) => {
+  createConne: (data, callBack) => {
     pool.query(
       `INSERT INTO connection VALUES (?,?,?,?,?,?)`,
-      [data.uuid, 0, 0, 1, data.initiatorId, data.facerId],
+      [
+        data.uuid,
+        data.isfriend,
+        data.isclosefriend,
+        data.isblocked,
+        data.initiatorId,
+        data.facerId,
+      ],
       (error, results, fields) => {
         if (error) {
           return callBack(error);
