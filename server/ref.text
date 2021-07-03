@@ -1,5 +1,0 @@
-SELECT * FROM User WHERE User.UserId IN (
-    (SELECT User1_Id FROM Friend WHERE User2_Id = MY_USER_ID)
-    UNION
-    (SELECT User2_Id FROM Friend WHERE User1_Id = MY_USER_ID)
-) WHERE aceepted = 1
