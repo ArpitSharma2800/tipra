@@ -1,155 +1,161 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
-  version: '1.0'
+  version: "1.0"
   title: tipra
   contact: {}
 host: localhost:5000
 basePath: /api
 securityDefinitions: {}
+
 schemes:
-- http
+  - http
+  - https
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
 consumes:
-- application/json
+  - application/json
 produces:
-- application/json
+  - application/json
 paths:
   /check:
     get:
       summary: http://localhost:5000/api/check
       tags:
-      - Misc
+        - Misc
       operationId: http://localhost:5000/api/check
       deprecated: false
       produces:
-      - application/json
+        - application/json
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
   /signup:
     post:
       summary: http://localhost:5000/api/signup
       tags:
-      - Misc
+        - Misc
       operationId: http://localhost:5000/api/signup
       deprecated: false
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: Authorization
-        in: header
-        required: false
-        default: Bearer {token}
-        type: string
-      - name: Body
-        in: body
-        required: true
-        description: ''
-        schema:
-          $ref: '#/definitions/http%3A~1~1localhost%3A5000~1api~1signuprequest'
+        - name: Authorization
+          in: header
+          required: false
+          default: Bearer {token}
+          type: string
+        - name: Body
+          in: body
+          required: true
+          description: ""
+          schema:
+            $ref: "#/definitions/signuprequest"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
   /signin:
     post:
       summary: http://localhost:5000/api/signin
       tags:
-      - Misc
+        - Misc
       operationId: http://localhost:5000/api/signin
       deprecated: false
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: Authorization
-        in: header
-        required: false
-        default: Bearer {token}
-        type: string
-      - name: Body
-        in: body
-        required: true
-        description: ''
-        schema:
-          $ref: '#/definitions/http%3A~1~1localhost%3A5000~1api~1signinrequest'
+        - name: Authorization
+          in: header
+          required: false
+          default: Bearer {token}
+          type: string
+        - name: Body
+          in: body
+          required: true
+          description: ""
+          schema:
+            $ref: "#/definitions/signinrequest"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
   /getuser:
     get:
       summary: http://localhost:5000/api/getuser?username=xxxx
       tags:
-      - Misc
+        - Misc
       operationId: http://localhost:5000/api/getuser?username=xxxx
       deprecated: false
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: Authorization
-        in: header
-        required: false
-        default: Bearer {token}
-        type: string
-      - name: username
-        in: query
-        required: true
-        type: string
-        description: ''
+        - name: Authorization
+          in: header
+          required: false
+          default: Bearer {token}
+          type: string
+        - name: username
+          in: query
+          required: true
+          type: string
+          description: ""
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
   /getusers:
     get:
       summary: http://localhost:5000/api/getusers
       tags:
-      - Misc
+        - Misc
       operationId: http://localhost:5000/api/getusers
       deprecated: false
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: Authorization
-        in: header
-        required: false
-        default: Bearer {token}
-        type: string
+        - name: Authorization
+          in: header
+          required: false
+          default: Bearer {token}
+          type: string
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
   /block:
     post:
       summary: http://localhost:5000/api/block
       tags:
-      - Misc
+        - Misc
       operationId: http://localhost:5000/api/block
       deprecated: false
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: Authorization
-        in: header
-        required: false
-        default: Bearer {token}
-        type: string
-      - name: Body
-        in: body
-        required: true
-        description: ''
-        schema:
-          $ref: '#/definitions/http%3A~1~1localhost%3A5000~1api~1blockrequest'
+        - name: Authorization
+          in: header
+          required: false
+          default: Bearer {token}
+          type: string
+        - name: Body
+          in: body
+          required: true
+          description: ""
+          schema:
+            $ref: "#/definitions/blockrequest"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           headers: {}
 definitions:
-  http://localhost:5000/api/signuprequest:
-    title: http://localhost:5000/api/signuprequest
+  signuprequest:
     example:
       email: abc@gmail.com
-      password: '123456'
+      password: "123456"
       username: arpitwwfe
       name: arpit
       age: 20
@@ -173,18 +179,17 @@ definitions:
       role:
         type: string
     required:
-    - email
-    - password
-    - username
-    - name
-    - age
-    - gender
-    - role
-  http://localhost:5000/api/signinrequest:
-    title: http://localhost:5000/api/signinrequest
+      - email
+      - password
+      - username
+      - name
+      - age
+      - gender
+      - role
+  signinrequest:
     example:
       email: abc@gmail.com
-      password: '123456'
+      password: "123456"
     type: object
     properties:
       email:
@@ -192,10 +197,9 @@ definitions:
       password:
         type: string
     required:
-    - email
-    - password
-  http://localhost:5000/api/blockrequest:
-    title: http://localhost:5000/api/blockrequest
+      - email
+      - password
+  blockrequest:
     example:
       facerId: bf7c65dc-53cc-43e9-8aba-f4e9376c280
     type: object
@@ -203,7 +207,7 @@ definitions:
       facerId:
         type: string
     required:
-    - facerId
+      - facerId
 tags:
-- name: Misc
-  description: ''
+  - name: Misc
+    description: ""

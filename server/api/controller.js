@@ -254,4 +254,6 @@ module.exports = {
       }
     });
   },
+  //send friend request
+  friendReq: (req, res) => {},
 };
